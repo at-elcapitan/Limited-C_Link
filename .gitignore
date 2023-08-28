@@ -1,0 +1,10 @@
+# VSCode
+.vscode
+
+# Build path
+build
+
+
+# Output files and configs
+config.json
+out
