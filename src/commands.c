@@ -1,7 +1,7 @@
 #include "commands.h"
 
-void on_message_delete(struct discord *client,
-                       const struct discord_message *event) {
+void on_message_bulk_delete(struct discord *client,
+                            const struct discord_message *event) {
   log_info("Clear called");
 
   struct discord_get_channel_messages params = {.limit = 10};

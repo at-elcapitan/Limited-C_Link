@@ -37,7 +37,7 @@ void onReady(struct discord *client, const struct discord_ready *event) {
 
 int main(int argc, char const *argv[]) {
   printf("(c) Vladislav 'ElCapitan' Nazarov\n");
-  printf("AT PROJECT Limited, 2022 - 2023; AT_C/LINK-setup\n");
+  printf("AT PROJECT Limited, 2022 - 2023; AT_C/LINK-v0.0.1\n");
   printf("Product licensed by CC BY-NC-ND-4, file `LICENSE`\n");
   printf("The license applies to all project files and previous versions "
          "(commits)\n\n");
@@ -46,11 +46,18 @@ int main(int argc, char const *argv[]) {
   struct discord *client = discord_config_init("config.json");
   discord_add_intents(client, DISCORD_GATEWAY_MESSAGE_CONTENT);
   discord_add_intents(client, DISCORD_GATEWAY_DISPATCH);
+
+  // Events
   discord_set_on_ready(client, &onReady);
   discord_set_on_voice_state_update(client, &on_voice_state_update);
-  discord_set_on_command(client, "clear", &on_message_delete);
+  discord_set_on_message_update(client, &on_message_update);
+  discord_set_on_message_delete(client, &on_message_delete);
+
+  // Commands
+  discord_set_on_command(client, "clear", &on_message_bulk_delete);
 
   discord_run(client);
 
+  discord_cleanup(client);
   return 0;
 }

@@ -18,3 +18,7 @@ void on_channel_update(struct discord *client,
                        const struct discord_channel *event);
 void on_voice_state_update(struct discord *client,
                            const struct discord_voice_state *event);
+void on_message_update(struct discord *client,
+                       const struct discord_message *event);
+void on_message_delete(struct discord *client,
+                       const struct discord_message_delete *event);
