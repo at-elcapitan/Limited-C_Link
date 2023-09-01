@@ -10,6 +10,7 @@
 #pragma once
 #include <concord/discord.h>
 #include <concord/log.h>
+#include <jansson.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

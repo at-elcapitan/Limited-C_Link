@@ -1,5 +1,24 @@
 #include "eventhandler.h"
-#include "commands.h"
+
+json_t *loadIChannels() {
+  FILE *f = fopen("channels.json", "r+");
+
+  if (f == NULL) {
+    log_info("Error while opening file `channels.json`");
+    return NULL;
+  }
+
+  char buffer[1024];
+  int len = fread(buffer, 1, sizeof(buffer), f);
+  fclose(f);
+
+  json_error_t error;
+  json_t *data = json_loads(buffer, 0, &error);
+  json_t *retval = json_object_get(data, "ignorred_channels");
+
+  free(data);
+  return retval;
+}
 
 void on_voice_state_update(struct discord *client,
                            const struct discord_voice_state *event) {
@@ -38,7 +57,20 @@ void on_voice_state_update(struct discord *client,
 
 void on_message_update(struct discord *client,
                        const struct discord_message *event) {
-  struct ccord_szbuf_readonly value;
+  json_t *IChannels = loadIChannels();
+
+  for (int x = 0; x != json_array_size(IChannels); ++x) {
+    unsigned long long val =
+        strtoull(json_string_value(json_array_get(IChannels, x)), NULL, 10);
+
+    if (val == event->channel_id) {
+      return;
+    }
+  }
+
+  free(IChannels);
+
+  struct ccord_szbuf_readonly value, val;
   struct discord_embed embed = {.timestamp = discord_timestamp(client),
                                 .color = 0x0707C};
   value =
@@ -72,6 +104,19 @@ void on_message_update(struct discord *client,
 
 void on_message_delete(struct discord *client,
                        const struct discord_message_delete *event) {
+  json_t *IChannels = loadIChannels();
+
+  for (int x = 0; x != json_array_size(IChannels); ++x) {
+    unsigned long long val =
+        strtoull(json_string_value(json_array_get(IChannels, x)), NULL, 10);
+
+    if (val == event->channel_id) {
+      return;
+    }
+  }
+
+  free(IChannels);
+
   struct ccord_szbuf_readonly value;
   struct discord_embed embed = {.timestamp = discord_timestamp(client),
                                 .color = 0x0707C};
