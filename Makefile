@@ -10,8 +10,8 @@ SOURCE_PATH = ./src/
 BUILD_PATH = ./build/
 OUTPUT_PAH = ./out/
 
-C_COM = cc
-CCOMFLAGS = -pthread -ldiscord -lcurl
+C_COM = gcc
+CCOMFLAGS = -pthread -ldiscord -lcurl -ljansson
 
 FILES = $(wildcard $(SOURCE_PATH)*.c)
 CMD_FILES = $(wildcard $(SOURCE_PATH)commands/*.c)
