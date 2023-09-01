@@ -56,6 +56,16 @@ Create a `config.json` file using the template (template from Concord [README.md
 }
 ```
 
+Create a `channels.json` file using the template:
+```
+{
+  "ignorred_channels" : [ // Reaplce with your channel IDs
+    "1234567890123456789", 
+    ...
+  ]
+}
+```
+
 ## Running
 
 Run `bot` file
