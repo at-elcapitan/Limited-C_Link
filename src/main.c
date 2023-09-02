@@ -37,7 +37,7 @@ void onReady(struct discord *client, const struct discord_ready *event) {
 
 int main(int argc, char const *argv[]) {
   printf("(c) Vladislav 'ElCapitan' Nazarov\n");
-  printf("AT PROJECT Limited, 2022 - 2023; AT_C/LINK-v0.0.1\n");
+  printf("AT PROJECT Limited, 2022 - 2023; AT_C/LINK-v0.0.2.1\n");
   printf("Product licensed by CC BY-NC-ND-4, file `LICENSE`\n");
   printf("The license applies to all project files and previous versions "
          "(commits)\n\n");

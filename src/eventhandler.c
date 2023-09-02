@@ -22,6 +22,10 @@ json_t *loadIChannels() {
 
 void on_voice_state_update(struct discord *client,
                            const struct discord_voice_state *event) {
+  if (event->self_stream || event->self_video) {
+    return;
+  }
+
   struct ccord_szbuf_readonly value;
   struct discord_embed embed = {.timestamp = discord_timestamp(client)};
   value =
