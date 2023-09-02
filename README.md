@@ -5,6 +5,7 @@
 This bot is a part of `Limited` bots:
 - [Limited nEXT](https://github.com/at-elcapitan/Limited_Py)
 - [Limited C/Link](https://github.com/at-elcapitan/Limited-C_Link) (this)
+- Limited jEXT (coming soon)
 
 `C/Link` is a simple single-server logging bot made with the `Concord` discord API library.
 
