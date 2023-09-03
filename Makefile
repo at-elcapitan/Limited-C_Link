@@ -11,7 +11,7 @@ BUILD_PATH = ./build/
 OUTPUT_PAH = ./out/
 
 C_COM = gcc
-CCOMFLAGS = -pthread -ldiscord -lcurl -ljansson
+CCOMFLAGS = -pthread -ldiscord -lcurl -ljansson -I/usr/include/glib-2.0 -lglib-2.0
 
 FILES = $(wildcard $(SOURCE_PATH)*.c)
 CMD_FILES = $(wildcard $(SOURCE_PATH)commands/*.c)

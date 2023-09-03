@@ -1,4 +1,12 @@
 #include "eventhandler.h"
+#define FNV_offset_basis 2166136261
+#define FNV_prime 16777619
+
+GHashTable *connectedUsers;
+
+void events_init() {
+  connectedUsers = g_hash_table_new(g_str_hash, g_str_equal);
+}
 
 json_t *loadIChannels() {
   FILE *f = fopen("channels.json", "r+");
@@ -22,9 +30,7 @@ json_t *loadIChannels() {
 
 void on_voice_state_update(struct discord *client,
                            const struct discord_voice_state *event) {
-  if (event->self_stream || event->self_video) {
-    return;
-  }
+  char desstring[19];
 
   struct ccord_szbuf_readonly value;
   struct discord_embed embed = {.timestamp = discord_timestamp(client)};
@@ -32,21 +38,37 @@ void on_voice_state_update(struct discord *client,
       discord_config_get_field(client, (char *[2]){"logging_channels", "1"}, 2);
   u64snowflake channelID = strtol(value.start, NULL, 10);
 
-  if (!event->channel_id) {
+  char userID[19];
+  char userchannelID[19];
+
+  sprintf(desstring, "%ld", event->member->user->id);
+  strcpy(userID, desstring);
+  sprintf(desstring, "%ld", event->channel_id);
+  strcpy(userchannelID, desstring);
+
+  if (g_hash_table_contains(connectedUsers, userID) && !event->channel_id) {
     embed.color = 0xFF0000;
     discord_embed_set_description(
-        &embed, "<@%ld> **disconnected from the voice channel**",
-        event->member->user->id);
+        &embed, "<@%ld> **disconnected from the voice channel** <#%s>",
+        event->member->user->id, g_hash_table_lookup(connectedUsers, userID));
+
+    g_hash_table_remove(connectedUsers, userID);
+  } else if (g_hash_table_contains(connectedUsers, userID) &&
+             event->channel_id) {
+    return;
   } else {
+    g_hash_table_insert(connectedUsers, userID, strdup(userchannelID));
+
     embed.color = 0x7070C7;
     discord_embed_set_description(
         &embed, "<@%ld> **connected to the voice channel** <#%ld>",
         event->member->user->id, event->channel_id);
   }
 
-  char desstring[5] = "";
   if (strcmp(event->member->user->discriminator, "0")) {
     sprintf(desstring, "#%s", event->member->user->discriminator);
+  } else {
+    strcpy(desstring, "");
   }
 
   discord_embed_set_title(&embed, "%s%s", event->member->user->username,
