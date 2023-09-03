@@ -10,6 +10,7 @@
 #pragma once
 #include <concord/discord.h>
 #include <concord/log.h>
+#include <glib-2.0/glib.h>
 #include <jansson.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,3 +24,4 @@ void on_message_update(struct discord *client,
                        const struct discord_message *event);
 void on_message_delete(struct discord *client,
                        const struct discord_message_delete *event);
+void events_init();

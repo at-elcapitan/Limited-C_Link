@@ -43,6 +43,7 @@ int main(int argc, char const *argv[]) {
          "(commits)\n\n");
 
   log_info("Stage: starting");
+  events_init();
   struct discord *client = discord_config_init("config.json");
   discord_add_intents(client, DISCORD_GATEWAY_MESSAGE_CONTENT);
   discord_add_intents(client, DISCORD_GATEWAY_DISPATCH);
