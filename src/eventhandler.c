@@ -1,6 +1,15 @@
+/**
+ * at_c/link (c) by alice
+ *
+ * at_c/link is licensed under a
+ * creative commons attribution-noncommercial-noderivatives 4.0 international
+ * license.
+ *
+ * you should have received a copy of the license along with this
+ * work. if not, see <http://creativecommons.org/licenses/by-nc-nd/4.0/>.
+ */
+ 
 #include "eventhandler.h"
-#define FNV_offset_basis 2166136261
-#define FNV_prime 16777619
 
 GHashTable *connectedUsers;
 
@@ -153,6 +162,78 @@ void on_message_delete(struct discord *client,
   discord_embed_set_title(&embed, "Message deleted");
   discord_embed_set_description(&embed, "**Channel:** <#%ld>\nMessage ID: %ld",
                                 event->channel_id, event->id);
+
+  struct discord_create_message params = {
+      .embeds = &(struct discord_embeds){.size = 1, .array = &embed}};
+
+  discord_create_message(client, channelID, &params, NULL);
+  discord_embed_cleanup(&embed);
+}
+
+void on_channel_create(struct discord *client,
+                       const struct discord_channel *event) {
+  struct ccord_szbuf_readonly value;
+  struct discord_embed embed = {.timestamp = discord_timestamp(client),
+                                .color = 0x7070C7};
+  value =
+      discord_config_get_field(client, (char *[2]){"logging_channels", "1"}, 2);
+  u64snowflake channelID = strtol(value.start, NULL, 10);
+
+  discord_embed_set_title(&embed, "Channel created");
+
+  char channelType[30];
+
+  switch (event->type) {
+  case 0:
+    strcpy(channelType, "Text channel (0)");
+    break;
+  case 2:
+    strcpy(channelType, "Voice channel (2)");
+    break;
+  case 15:
+    strcpy(channelType, "Forum (15)");
+    break;
+  case 5:
+    strcpy(channelType, "Announcement Channel (5)");
+    break;
+  case 13:
+    strcpy(channelType, "Stage (13)");
+    break;
+  default:
+    strcpy(channelType, "Undefined (UNDEF)");
+    break;
+  }
+
+  char strg[20];
+  sprintf(strg, "ID: %ld", event->id);
+
+  discord_embed_set_footer(&embed, strg, NULL, NULL);
+  discord_embed_set_description(&embed, "Channel: <#%ld>\nChannel Type: `%s`",
+                                event->id, channelType);
+
+  struct discord_create_message params = {
+      .embeds = &(struct discord_embeds){.size = 1, .array = &embed}};
+
+  discord_create_message(client, channelID, &params, NULL);
+  discord_embed_cleanup(&embed);
+}
+
+void on_channel_delete(struct discord *client,
+                       const struct discord_channel *event) {
+  struct ccord_szbuf_readonly value;
+  struct discord_embed embed = {.timestamp = discord_timestamp(client),
+                                .color = 0xFF0000};
+  value =
+      discord_config_get_field(client, (char *[2]){"logging_channels", "1"}, 2);
+  u64snowflake channelID = strtol(value.start, NULL, 10);
+
+  char strg[20];
+  sprintf(strg, "ID: %ld", event->id);
+
+  discord_embed_set_footer(&embed, strg, NULL, NULL);
+  discord_embed_set_title(&embed, "Channel deleted");
+  discord_embed_set_description(&embed, "Channel Name: `%s`\nPosition: `%d`",
+                                event->name, event->position);
 
   struct discord_create_message params = {
       .embeds = &(struct discord_embeds){.size = 1, .array = &embed}};

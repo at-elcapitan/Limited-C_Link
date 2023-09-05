@@ -24,4 +24,8 @@ void on_message_update(struct discord *client,
                        const struct discord_message *event);
 void on_message_delete(struct discord *client,
                        const struct discord_message_delete *event);
+void on_channel_create(struct discord *client,
+                       const struct discord_channel *event);
+void on_channel_delete(struct discord *client,
+                       const struct discord_channel *event);
 void events_init();
