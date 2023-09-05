@@ -1,12 +1,12 @@
 /**
- * AT_C/LINK (c) by alice
+ * at_c/link (c) by alice
  *
- * AT_C/LINK is licensed under a
- * Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International
- * License.
+ * at_c/link is licensed under a
+ * creative commons attribution-noncommercial-noderivatives 4.0 international
+ * license.
  *
- * You should have received a copy of the license along with this
- * work. If not, see <http://creativecommons.org/licenses/by-nc-nd/4.0/>.
+ * you should have received a copy of the license along with this
+ * work. if not, see <http://creativecommons.org/licenses/by-nc-nd/4.0/>.
  */
 
 #include "main.h"
@@ -51,6 +51,8 @@ int main(int argc, char const *argv[]) {
   // Events
   discord_set_on_ready(client, &onReady);
   discord_set_on_voice_state_update(client, &on_voice_state_update);
+  discord_set_on_channel_create(client, &on_channel_create);
+  discord_set_on_channel_delete(client, &on_channel_delete);
   discord_set_on_message_update(client, &on_message_update);
   discord_set_on_message_delete(client, &on_message_delete);
 
