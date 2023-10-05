@@ -37,10 +37,18 @@ void onReady(struct discord *client, const struct discord_ready *event) {
 
 int main(int argc, char const *argv[]) {
   printf("(c) Vladislav 'ElCapitan' Nazarov\n");
-  printf("AT PROJECT Limited, 2022 - 2023; AT_C/LINK-v0.0.2.1\n");
+  printf("AT PROJECT Limited, 2022 - 2023; AT_C/LINK-v0.0.4\n");
   printf("Product licensed by CC BY-NC-ND-4, file `LICENSE`\n");
   printf("The license applies to all project files and previous versions "
          "(commits)\n\n");
+
+#ifndef __ULL_OK
+  log_warn("The size of unsigned long long is not equal to the 8 bytes. This can lead to critical errors.");
+#endif
+
+#ifndef __INT_OK
+  log_warn("The size of int is not equal to the 4 bytes. This can lead to critical errors.");
+#endif
 
   log_info("Stage: starting");
   events_init();
@@ -55,9 +63,6 @@ int main(int argc, char const *argv[]) {
   discord_set_on_channel_delete(client, &on_channel_delete);
   discord_set_on_message_update(client, &on_message_update);
   discord_set_on_message_delete(client, &on_message_delete);
-
-  // Commands
-  discord_set_on_command(client, "clear", &on_message_bulk_delete);
 
   discord_run(client);
 
